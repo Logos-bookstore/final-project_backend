@@ -4,7 +4,7 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 import { database } from './database/database.js';
-import user from './routes/user.js';
+import user from './routes/userRoutes.js';
 
 const app = express();
 
