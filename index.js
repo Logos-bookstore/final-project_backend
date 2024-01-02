@@ -4,6 +4,7 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 import { database } from './database/database.js';
+import { errorStatus, notFound } from './middleware/errors.js';
 import books from './routes/booksRoutes.js';
 import genres from './routes/genresRoutes.js';
 import user from './routes/userRoutes.js';
@@ -26,5 +27,8 @@ database();
 app.use('/api/books', books);
 app.use('/api/genres', genres);
 app.use('/api/user', user);
+
+app.use(notFound);
+app.use(errorStatus);
 
 app.listen(PORT, () => console.log('the server is running on port', PORT));

@@ -4,12 +4,14 @@ import {
   login,
   register,
 } from '../controllers/userControllers.js';
+import { validation } from '../middleware/validation.js';
+import { authorization } from '../middleware/authorization.js';
 
 const routes = Router();
 
-routes.post('/register', register);
-routes.post('/login', login);
+routes.post('/register', validation, register);
+routes.post('/login', /* authorization,  */ login);
 
-routes.get('/verifytoken', authorizedUser);
+routes.get('/verifytoken', authorization, authorizedUser);
 
 export default routes;
