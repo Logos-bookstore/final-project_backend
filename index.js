@@ -4,6 +4,8 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 import { database } from './database/database.js';
+import books from './routes/books.js';
+import genres from './routes/genres.js';
 
 const app = express();
 
@@ -19,5 +21,8 @@ app.use(fileUpload());
 app.use(morgan('tiny'));
 
 database();
+
+app.use('/api/books', books);
+app.use('/api/genres', genres);
 
 app.listen(PORT, () => console.log('the server is running on port', PORT));
