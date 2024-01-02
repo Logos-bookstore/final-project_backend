@@ -4,8 +4,8 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 import { database } from './database/database.js';
-import books from './routes/books.js';
-import genres from './routes/genres.js';
+import books from './routes/booksRoutes.js';
+import genres from './routes/genresRoutes.js';
 
 const app = express();
 
