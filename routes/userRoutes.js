@@ -10,7 +10,7 @@ import { authorization } from '../middleware/authorization.js';
 const routes = Router();
 
 routes.post('/register', validation, register);
-routes.post('/login', /* authorization,  */ login);
+routes.post('/login', login);
 
 routes.get('/verifytoken', authorization, authorizedUser);
 
