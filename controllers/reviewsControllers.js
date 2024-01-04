@@ -88,15 +88,22 @@ export const editReview = async (req, res, next) => {
 
 export const deleteReview = async (req, res, next) => {
   try {
-    const handleDelete = await ReviewModel.findByIdAndDelete(req.params.id);
+    await ReviewModel.findByIdAndDelete(req.params.id);
 
-    const updateUser = await UserModel.findByIdAndDelete(req.params.id, {
-      $pull: { reviews: req.params.id },
-    });
+    // delete the references in the User & Book collections:
+    await UserModel.updateOne(
+      { reviews: req.params.id },
+      {
+        $pull: { reviews: req.params.id },
+      }
+    );
 
-    const updateBook = await BookModel.findByIdAndDelete(req.params.id, {
-      $pull: { reviews: req.params.id },
-    });
+    await BookModel.updateOne(
+      { reviews: req.params.id },
+      {
+        $pull: { reviews: req.params.id },
+      }
+    );
 
     res.send({ success: true, message: 'review deleted' });
   } catch (error) {
