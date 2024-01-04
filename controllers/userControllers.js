@@ -49,8 +49,23 @@ const login = async (req, res, next) => {
   }
 };
 
+const updateUser = async (req, res, next) => {
+  try {
+    if(req.body.password) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const user = await UserModel.findByIdAndUpdate(req.params.id, {password: hashedPassword}, {new: true});
+      res.json({success: true, data: user});
+    } else {
+      const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {new: true});
+      res.json({success: true, data: user});
+    };
+  } catch (error) {
+    next(error);
+  }
+};
+
 const authorizedUser = (req, res) => {
   res.json({ success: true, data: req.user });
 };
 
-export { register, login, authorizedUser };
+export { register, login, updateUser, authorizedUser };
