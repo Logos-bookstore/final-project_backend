@@ -56,7 +56,17 @@ const genreBook = async (req, res, next) => {
 
 const getAllBooks = async (req, res, next) => {
   try {
-    const books = await BookModel.find();
+    const books = await BookModel.find().select({
+      title: 1,
+      author: 1,
+      year: 1,
+      publisher: 1,
+      genre: 1,
+      description: 1,
+      price: 1,
+      ISBN: 1,
+      'image.thumbnail': 1,
+    });
     res.json({ success: true, data: books });
   } catch (error) {
     next(error);
