@@ -37,11 +37,30 @@ const createBook = async (req, res, next) => {
 
 const genreBook = async (req, res, next) => {
   try {
-    const books = await BookModel.find({genre: req.body.genre}).select({title: 1, author: 1, year: 1, publisher: 1, genre: 1, description: 1, price: 1, ISBN: 1, 'image.thumbnail': 1});
-    res.json({success: true, data: books});
+    const books = await BookModel.find({ genre: req.body.genre }).select({
+      title: 1,
+      author: 1,
+      year: 1,
+      publisher: 1,
+      genre: 1,
+      description: 1,
+      price: 1,
+      ISBN: 1,
+      'image.thumbnail': 1,
+    });
+    res.json({ success: true, data: books });
   } catch (error) {
     next(error);
   }
 };
 
-export { createBook, genreBook };
+const getAllBooks = async (req, res, next) => {
+  try {
+    const books = await BookModel.find();
+    res.json({ success: true, data: books });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createBook, genreBook, getAllBooks };
