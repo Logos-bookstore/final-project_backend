@@ -8,6 +8,7 @@ import { errorStatus, notFound } from './middleware/errors.js';
 import books from './routes/booksRoutes.js';
 import genres from './routes/genresRoutes.js';
 import user from './routes/userRoutes.js';
+import reviews from './routes/reviewsRoutes.js';
 
 const app = express();
 
@@ -27,6 +28,7 @@ database();
 app.use('/api/books', books);
 app.use('/api/genres', genres);
 app.use('/api/user', user);
+app.use('/api/reviews', reviews);
 
 app.use(notFound);
 app.use(errorStatus);
