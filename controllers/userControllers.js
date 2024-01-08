@@ -53,10 +53,19 @@ const updateUser = async (req, res, next) => {
   try {
     if(req.body.password) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const user = await UserModel.findByIdAndUpdate(req.params.id, {password: hashedPassword}, {new: true});
+      const user = await UserModel.findByIdAndUpdate(req.params.id, {password: hashedPassword}, {new: true}).select({"image.fileName": 0, "image.data": 0});
+      res.json({success: true, data: user});
+    } else if(req.files.image.name) {
+      const fileName = Date.now() + '_' + req.files.image.name;
+      const data = {
+        fileName: fileName,
+        data: req.files.image.data,
+        thumbnail:`${process.env.PROFILE_IMAGE}${fileName}`
+      };
+      const user = await UserModel.findByIdAndUpdate(req.params.id, {image: data}, {new: true}).select({"image.fileName": 0, "image.data": 0});
       res.json({success: true, data: user});
     } else {
-      const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {new: true});
+      const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {new: true}).select({"image.fileName": 0, "image.data": 0});
       res.json({success: true, data: user});
     };
   } catch (error) {
