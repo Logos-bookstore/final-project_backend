@@ -3,6 +3,7 @@ import {
   createBook,
   genreBook,
   getAllBooks,
+  searchBook,
 } from '../controllers/booksControllers.js';
 import { streamBookImage } from '../controllers/imageController.js';
 import { authorization } from '../middleware/authorization.js';
@@ -14,5 +15,6 @@ routes.post('/book', authorization, role, createBook);
 routes.post('/genre', genreBook);
 routes.get('/all', getAllBooks);
 routes.get('/image/:fileName', streamBookImage);
+routes.get('/search/:regex', searchBook);
 
 export default routes;
