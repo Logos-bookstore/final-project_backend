@@ -1,18 +1,22 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   createBook,
   genreBook,
   getAllBooks,
-} from '../controllers/booksControllers.js';
-import { streamBookImage } from '../controllers/imageController.js';
-import { authorization } from '../middleware/authorization.js';
-import { role } from '../middleware/role.js';
+  updateBook,
+  deleteBook,
+} from "../controllers/booksControllers.js";
+import { streamBookImage } from "../controllers/imageController.js";
+import { authorization } from "../middleware/authorization.js";
+import { role } from "../middleware/role.js";
 
 const routes = Router();
 
-routes.post('/book', authorization, role, createBook);
-routes.post('/genre', genreBook);
-routes.get('/all', getAllBooks);
-routes.get('/image/:fileName', streamBookImage);
+routes.post("/book", authorization, role, createBook);
+routes.post("/genre", genreBook);
+routes.get("/all", getAllBooks);
+routes.get("/image/:fileName", streamBookImage);
+routes.patch("/update/:id", authorization, updateBook);
+routes.delete("/delete/:id", authorization, deleteBook);
 
 export default routes;
