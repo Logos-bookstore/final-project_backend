@@ -93,4 +93,13 @@ const deleteBook = async (req, res, next) => {
   }
 };
 
-export { createBook, genreBook, getAllBooks, updateBook, deleteBook };
+const searchBook = async (req, res, next) => {
+  try {
+    const book = await BookModel.find({$or: [{title: {$regex: req.params.regex}}, {'author.firstName': {$regex: req.params.regex}}, {'author.lastName': {$regex: req.params.regex}}]});
+    res.json({success: true, data: book});
+  } catch (error) {
+    next(error);
+  };
+};
+
+export { createBook, genreBook, getAllBooks, searchBook, updateBook, deleteBook };
