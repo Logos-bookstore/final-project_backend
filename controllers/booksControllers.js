@@ -1,9 +1,9 @@
-import BookModel from '../models/Book.js';
-import GenreModel from '../models/Genre.js';
+import BookModel from "../models/Book.js";
+import GenreModel from "../models/Genre.js";
 
 const createBook = async (req, res, next) => {
   try {
-    const fileName = Date.now() + '_' + req.files.image.name;
+    const fileName = Date.now() + "_" + req.files.image.name;
     const data = {
       title: req.body.title,
       author: {
@@ -29,7 +29,7 @@ const createBook = async (req, res, next) => {
       const genre = await GenreModel.create({ genre: req.body.genre });
     }
 
-    res.json({ success: true, message: 'The book was uploaded successfully.' });
+    res.json({ success: true, message: "The book was uploaded successfully." });
   } catch (error) {
     next(error);
   }
@@ -46,7 +46,7 @@ const genreBook = async (req, res, next) => {
       description: 1,
       price: 1,
       ISBN: 1,
-      'image.thumbnail': 1,
+      "image.thumbnail": 1,
     });
     res.json({ success: true, data: books });
   } catch (error) {
@@ -65,7 +65,7 @@ const getAllBooks = async (req, res, next) => {
       description: 1,
       price: 1,
       ISBN: 1,
-      'image.thumbnail': 1,
+      "image.thumbnail": 1,
     });
     res.json({ success: true, data: books });
   } catch (error) {
@@ -77,6 +77,26 @@ const getBookById = async (req, res, next) => {
   try {
     const book = await BookModel.findById(req.params.id);
     res.send({ success: true, data: book });
+    } catch (error) {
+    next(error);
+  }
+};
+
+const updateBook = async (req, res, next) => {
+  try {
+    const book = await BookModel.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json({ success: true, data: book });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteBook = async (req, res, next) => {
+  try {
+    await BookModel.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "The book was successfully deleted." });
   } catch (error) {
     next(error);
   }
@@ -97,4 +117,4 @@ const searchBook = async (req, res, next) => {
   }
 };
 
-export { createBook, genreBook, getAllBooks, getBookById, searchBook };
+export { createBook, genreBook, getAllBooks, searchBook, updateBook, deleteBook, getBookById };
