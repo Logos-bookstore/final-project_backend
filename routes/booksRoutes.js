@@ -3,6 +3,7 @@ import {
   createBook,
   genreBook,
   getAllBooks,
+  getBookById,
   searchBook,
 } from '../controllers/booksControllers.js';
 import { streamBookImage } from '../controllers/imageController.js';
@@ -14,6 +15,7 @@ const routes = Router();
 routes.post('/book', authorization, role, createBook);
 routes.post('/genre', genreBook);
 routes.get('/all', getAllBooks);
+routes.get('/:id', getBookById);
 routes.get('/image/:fileName', streamBookImage);
 routes.get('/search/:regex', searchBook);
 
