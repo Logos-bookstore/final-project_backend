@@ -73,6 +73,15 @@ const getAllBooks = async (req, res, next) => {
   }
 };
 
+const getBookById = async (req, res, next) => {
+  try {
+    const book = await BookModel.findById(req.params.id);
+    res.send({ success: true, data: book });
+    } catch (error) {
+    next(error);
+  }
+};
+
 const updateBook = async (req, res, next) => {
   try {
     const book = await BookModel.findByIdAndUpdate(req.params.id, req.body, {
@@ -95,11 +104,17 @@ const deleteBook = async (req, res, next) => {
 
 const searchBook = async (req, res, next) => {
   try {
-    const book = await BookModel.find({$or: [{title: {$regex: req.params.regex}}, {'author.firstName': {$regex: req.params.regex}}, {'author.lastName': {$regex: req.params.regex}}]});
-    res.json({success: true, data: book});
+    const book = await BookModel.find({
+      $or: [
+        { title: { $regex: req.params.regex } },
+        { 'author.firstName': { $regex: req.params.regex } },
+        { 'author.lastName': { $regex: req.params.regex } },
+      ],
+    });
+    res.json({ success: true, data: book });
   } catch (error) {
     next(error);
-  };
+  }
 };
 
-export { createBook, genreBook, getAllBooks, searchBook, updateBook, deleteBook };
+export { createBook, genreBook, getAllBooks, searchBook, updateBook, deleteBook, getBookById };
