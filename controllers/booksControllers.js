@@ -104,11 +104,14 @@ const deleteBook = async (req, res, next) => {
 
 const searchBook = async (req, res, next) => {
   try {
+    const unPlused = req.params.regex.replaceAll('+', ' ');
+    //console.log(unPlused[unPlused.length -1])
     const book = await BookModel.find({
       $or: [
-        { title: { $regex: req.params.regex } },
-        { 'author.firstName': { $regex: req.params.regex } },
-        { 'author.lastName': { $regex: req.params.regex } },
+        { title: { $regex: unPlused } },
+        {author: { $regex: unPlused }},
+        //{ 'author.firstName': { $regex: unPlused[0] } },
+        //{ 'author.lastName': { $regex: unPlused[unPlused.length -1] } },
       ],
     });
     res.json({ success: true, data: book });
