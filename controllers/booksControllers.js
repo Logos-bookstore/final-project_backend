@@ -6,10 +6,7 @@ const createBook = async (req, res, next) => {
     const fileName = Date.now() + "_" + req.files.image.name;
     const data = {
       title: req.body.title,
-      author: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-      },
+      author: req.body.combinedName,
       year: parseInt(req.body.year),
       publisher: req.body.publisher,
       genre: req.body.genre,
