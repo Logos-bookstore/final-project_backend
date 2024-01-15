@@ -79,6 +79,7 @@ const getBookById = async (req, res, next) => {
     const book = await BookModel.findById(req.params.id).select({
       title: 1,
       author: 1,
+      description: 1,
       price: 1,
       avgRating: 1,
       'image.thumbnail': 1,
