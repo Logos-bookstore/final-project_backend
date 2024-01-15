@@ -99,8 +99,8 @@ const deleteBook = async (req, res, next) => {
   try {
     // delete book's reviews and ref's in users' docs:
     const findReviews = await ReviewModel.find({ book: req.params.id });
-    const del = (findReviews) => {
-      const promises = findReviews.map(async (i) => {
+    const deleteRefsInUser = (reviewsArr) => {
+      const promises = reviewsArr.map(async (i) => {
         return await UserModel.updateOne(
           { reviews: i._id },
           { $pull: { reviews: i._id } },
@@ -109,14 +109,14 @@ const deleteBook = async (req, res, next) => {
       });
       return Promise.all(promises);
     };
-    del(findReviews);
-    const delRev = (findReviews) => {
-      const promises = findReviews.map(async (i) => {
+    deleteRefsInUser(findReviews);
+    const deleteRevDocs = (reviewsArr) => {
+      const promises = reviewsArr.map(async (i) => {
         return await ReviewModel.findByIdAndDelete(i._id);
       });
       return Promise.all(promises);
     };
-    delRev(findReviews);
+    deleteRevDocs(findReviews);
     // delete the book itself:
     await BookModel.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'The book was successfully deleted.' });
