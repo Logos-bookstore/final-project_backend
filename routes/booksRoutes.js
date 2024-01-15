@@ -20,7 +20,7 @@ routes.get('/all', getAllBooks);
 routes.get('/:id', getBookById);
 routes.get('/image/:fileName', streamBookImage);
 routes.get('/search/:regex', searchBook);
-routes.patch("/update/:id", authorization, updateBook);
-routes.delete("/delete/:id", authorization, deleteBook);
+routes.patch("/update/:id", authorization, role, updateBook);
+routes.delete("/delete/:id", authorization, role, deleteBook);
 
 export default routes;
