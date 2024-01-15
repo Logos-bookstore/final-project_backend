@@ -7,7 +7,6 @@ export const getAllReviews = async (req, res, next) => {
     const showReviews = await ReviewModel.find()
       .populate('book', 'title -_id')
       .populate('userId', 'firstName' /* , email */);
-
     res.send({ success: true, data: showReviews });
   } catch (error) {
     next(error);
@@ -20,7 +19,6 @@ export const getSingleReview = async (req, res, next) => {
     const showOneReview = await ReviewModel.findById(req.params.id)
       .populate('book', 'title')
       .populate('userId', 'firstName');
-
     res.send({ success: true, data: showOneReview });
   } catch (error) {
     next(error);
@@ -32,7 +30,6 @@ export const getReviewsByUserId = async (req, res, next) => {
     const getReviews = await ReviewModel.find({
       userId: req.params.id,
     }).populate('userId', 'email');
-
     res.send({ success: true, data: getReviews });
   } catch (error) {
     next(error);
@@ -45,7 +42,6 @@ export const getReviewsByBookId = async (req, res, next) => {
       'userId',
       'firstName'
     );
-
     res.send({ success: true, data: getReviews });
   } catch (error) {
     next(error);
@@ -60,9 +56,18 @@ export const addReview = async (req, res, next) => {
       { $push: { reviews: createReview._id } },
       { new: true }
     );
+
+    // update the average rating of the book:
+    const findReviews = await ReviewModel.find({ book: createReview.book });
+    let sumRatings = 0;
+    const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
+    const average = (sumRatingsArray.at(-1) / findReviews.length)
+      .toFixed(1)
+      .replace(/\.0+$/, '');
+
     const updateBook = await BookModel.findByIdAndUpdate(
       req.body.book,
-      { $push: { reviews: createReview._id } },
+      { avgRating: average, $push: { reviews: createReview._id } },
       { new: true }
     );
 
@@ -80,6 +85,21 @@ export const editReview = async (req, res, next) => {
       { new: true }
     );
 
+    // update the average rating of the book:
+    const bookId = updateReview.book;
+    const findReviews = await ReviewModel.find({ book: bookId });
+    let sumRatings = 0;
+    const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
+    const average = (sumRatingsArray.at(-1) / findReviews.length)
+      .toFixed(1)
+      .replace(/\.0+$/, '');
+
+    const updateBook = await BookModel.findByIdAndUpdate(
+      bookId,
+      { avgRating: average },
+      { new: true }
+    );
+
     res.send({ success: true, data: updateReview });
   } catch (error) {
     next(error);
@@ -88,17 +108,27 @@ export const editReview = async (req, res, next) => {
 
 export const deleteReview = async (req, res, next) => {
   try {
-    await ReviewModel.findByIdAndDelete(req.params.id);
+    const findReview = await ReviewModel.findById(req.params.id);
+    const bookId = findReview.book;
+    const removeReview = await ReviewModel.findByIdAndDelete(req.params.id);
+
+    // update the average rating of the book
+    // why isn't reduce working here ??
+    const findReviews = await ReviewModel.find({ book: bookId });
+    let sumRatings = 0;
+    const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
+    const average = (sumRatingsArray.at(-1) / findReviews.length)
+      .toFixed(1)
+      .replace(/\.0+$/, '');
 
     // delete the references in the User & Book collections:
-    await UserModel.updateOne(
-      { reviews: req.params.id },
-      {
-        $pull: { reviews: req.params.id },
-      }
+    const updateBook = await BookModel.findByIdAndUpdate(
+      bookId,
+      { avgRating: average, $pull: { reviews: req.params.id } },
+      { new: true }
     );
 
-    await BookModel.updateOne(
+    const updateUser = await UserModel.updateOne(
       { reviews: req.params.id },
       {
         $pull: { reviews: req.params.id },
