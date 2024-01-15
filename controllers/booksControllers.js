@@ -1,5 +1,7 @@
 import BookModel from '../models/Book.js';
 import GenreModel from '../models/Genre.js';
+import ReviewModel from '../models/Review.js';
+import UserModel from '../models/User.js';
 
 const createBook = async (req, res, next) => {
   try {
@@ -95,6 +97,27 @@ const updateBook = async (req, res, next) => {
 
 const deleteBook = async (req, res, next) => {
   try {
+    // delete book's reviews and ref's in users' docs:
+    const findReviews = await ReviewModel.find({ book: req.params.id });
+    const deleteRefsInUser = (reviewsArr) => {
+      const promises = reviewsArr.map(async (i) => {
+        return await UserModel.updateOne(
+          { reviews: i._id },
+          { $pull: { reviews: i._id } },
+          { new: true }
+        );
+      });
+      return Promise.all(promises);
+    };
+    deleteRefsInUser(findReviews);
+    const deleteRevDocs = (reviewsArr) => {
+      const promises = reviewsArr.map(async (i) => {
+        return await ReviewModel.findByIdAndDelete(i._id);
+      });
+      return Promise.all(promises);
+    };
+    deleteRevDocs(findReviews);
+    // delete the book itself:
     await BookModel.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'The book was successfully deleted.' });
   } catch (error) {

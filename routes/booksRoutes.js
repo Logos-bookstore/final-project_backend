@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   createBook,
   genreBook,
@@ -6,11 +6,11 @@ import {
   getBookById,
   updateBook,
   deleteBook,
-  searchBook
-} from "../controllers/booksControllers.js";
-import { streamBookImage } from "../controllers/imageController.js";
-import { authorization } from "../middleware/authorization.js";
-import { role } from "../middleware/role.js";
+  searchBook,
+} from '../controllers/booksControllers.js';
+import { streamBookImage } from '../controllers/imageController.js';
+import { authorization } from '../middleware/authorization.js';
+import { role } from '../middleware/role.js';
 
 const routes = Router();
 
@@ -20,7 +20,7 @@ routes.get('/all', getAllBooks);
 routes.get('/:id', getBookById);
 routes.get('/image/:fileName', streamBookImage);
 routes.get('/search/:regex', searchBook);
-routes.patch("/update/:id", authorization, updateBook);
-routes.delete("/delete/:id", authorization, deleteBook);
+routes.patch('/update/:id', authorization, role, updateBook);
+routes.delete('/delete/:id', authorization, role, deleteBook);
 
 export default routes;
