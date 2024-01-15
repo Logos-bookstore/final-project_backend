@@ -85,7 +85,20 @@ export const editReview = async (req, res, next) => {
       { new: true }
     );
 
-    //update avgGrading here !!
+    // update the average rating of the book:
+    const bookId = updateReview.book;
+    const findReviews = await ReviewModel.find({ book: bookId });
+    let sumRatings = 0;
+    const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
+    const average = (sumRatingsArray.at(-1) / findReviews.length)
+      .toFixed(1)
+      .replace(/\.0+$/, '');
+
+    const updateBook = await BookModel.findByIdAndUpdate(
+      bookId,
+      { avgRating: average },
+      { new: true }
+    );
 
     res.send({ success: true, data: updateReview });
   } catch (error) {
