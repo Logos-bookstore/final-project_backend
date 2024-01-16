@@ -22,7 +22,7 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const user = await UserModel.findOne({ email: req.body.email });
+    const user = await UserModel.findOne({ email: req.body.email }).select({"image.fileName": 0, "image.data": 0});
     if (user) {
       const password = await bcrypt.compare(req.body.password, user.password);
       if (password) {
@@ -58,6 +58,11 @@ const updateUser = async (req, res, next) => {
         { password: hashedPassword },
         { new: true }
       ).select({ "image.fileName": 0, "image.data": 0 });
+      res.json({ success: true, data: user });
+    } else if(req.body.address) {
+      const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      }).select({ "image.fileName": 0, "image.data": 0 });
       res.json({ success: true, data: user });
     } else if (req.files.image.name) {
       const fileName = Date.now() + "_" + req.files.image.name;

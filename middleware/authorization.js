@@ -6,7 +6,7 @@ export const authorization = async (req, res, next) => {
     const token = req.headers.token;
     const payload = jwt.verify(token, process.env.TOKEN_KEY);
     if (payload) {
-      const user = await UserModel.findById(payload._id);
+      const user = await UserModel.findById(payload._id).select({"image.fileName": 0, "image.data": 0});
       req.user = user;
       next();
     }
