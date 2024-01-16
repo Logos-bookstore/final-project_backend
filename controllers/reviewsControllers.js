@@ -6,7 +6,7 @@ export const getAllReviews = async (req, res, next) => {
   try {
     const showReviews = await ReviewModel.find()
       .populate('book', 'title -_id')
-      .populate('userId', 'firstName' /* , email */);
+      .populate('userId', 'firstName');
     res.send({ success: true, data: showReviews });
   } catch (error) {
     next(error);
@@ -28,8 +28,9 @@ export const getSingleReview = async (req, res, next) => {
 export const getReviewsByUserId = async (req, res, next) => {
   try {
     const getReviews = await ReviewModel.find({
-      userId: req.params.id,
+      userId: req.user._id,
     }).populate('userId', 'email');
+
     res.send({ success: true, data: getReviews });
   } catch (error) {
     next(error);
@@ -61,9 +62,11 @@ export const addReview = async (req, res, next) => {
     const findReviews = await ReviewModel.find({ book: createReview.book });
     let sumRatings = 0;
     const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
-    const average = (sumRatingsArray.at(-1) / findReviews.length)
-      .toFixed(1)
-      .replace(/\.0+$/, '');
+    const average = sumRatingsArray.at(-1)
+      ? (sumRatingsArray.at(-1) / findReviews.length)
+          .toFixed(1)
+          .replace(/\.0+$/, '')
+      : 0;
 
     const updateBook = await BookModel.findByIdAndUpdate(
       req.body.book,
@@ -117,9 +120,11 @@ export const deleteReview = async (req, res, next) => {
     const findReviews = await ReviewModel.find({ book: bookId });
     let sumRatings = 0;
     const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
-    const average = (sumRatingsArray.at(-1) / findReviews.length)
-      .toFixed(1)
-      .replace(/\.0+$/, '');
+    const average = sumRatingsArray.at(-1)
+      ? (sumRatingsArray.at(-1) / findReviews.length)
+          .toFixed(1)
+          .replace(/\.0+$/, '')
+      : 0;
 
     // delete the references in the User & Book collections:
     const updateBook = await BookModel.findByIdAndUpdate(
@@ -129,6 +134,7 @@ export const deleteReview = async (req, res, next) => {
     );
 
     const updateUser = await UserModel.updateOne(
+      //
       { reviews: req.params.id },
       {
         $pull: { reviews: req.params.id },

@@ -14,7 +14,7 @@ const routes = Router();
 
 routes.get('/all', getAllReviews);
 routes.get('/single/:id', authorization, getSingleReview);
-routes.get('/one_user/:id', authorization, getReviewsByUserId);
+routes.get('/one_user', authorization, getReviewsByUserId);
 routes.get('/one_book/:id', getReviewsByBookId);
 routes.post('/new', authorization, addReview);
 routes.patch('/edit/:id', authorization, editReview);
