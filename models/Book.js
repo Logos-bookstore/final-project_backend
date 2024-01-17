@@ -7,6 +7,7 @@ const BookSchema = new Schema({
   publisher: { type: String, required: true },
   genre: { type: String, required: true },
   description: { type: String, required: true },
+  pages: { type: Number, required: true },
   price: { type: Number, required: true },
   ISBN: { type: String, required: true, index: { unique: true } },
   reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
