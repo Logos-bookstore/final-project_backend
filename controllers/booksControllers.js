@@ -13,6 +13,7 @@ const createBook = async (req, res, next) => {
       publisher: req.body.publisher,
       genre: req.body.genre,
       description: req.body.description,
+      pages: req.body.pages,
       price: parseFloat(req.body.price),
       ISBN: req.body.isbn,
       image: {
