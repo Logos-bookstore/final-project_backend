@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 
 const OrderSchema = new Schema({
+    date: {type: String, required: true},
     books: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
     totalPrice: { type: Number, required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },

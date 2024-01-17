@@ -77,7 +77,6 @@ const getAllBooks = async (req, res, next) => {
 const getBookById = async (req, res, next) => {
   try {
     const book = await BookModel.findById(req.params.id).select('-reviews');
-    console.log(book);
     res.send({ success: true, data: book });
   } catch (error) {
     next(error);
