@@ -51,6 +51,13 @@ export const getReviewsByBookId = async (req, res, next) => {
 
 export const addReview = async (req, res, next) => {
   try {
+    if (!req.body.rating) {
+      res.send({
+        success: false,
+        message: 'Please choose your rating from 1-5',
+      });
+    }
+
     const createReview = await ReviewModel.create(req.body);
     const updateUser = await UserModel.findByIdAndUpdate(
       req.body.userId,
@@ -59,7 +66,7 @@ export const addReview = async (req, res, next) => {
     );
 
     // update the average rating of the book:
-    const findReviews = await ReviewModel.find({ book: createReview.book });
+    const findReviews = await ReviewModel.find({ book: req.body.book });
     let sumRatings = 0;
     const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
     const average = sumRatingsArray.at(-1)
@@ -85,6 +92,7 @@ export const editReview = async (req, res, next) => {
     const updateReview = await ReviewModel.findByIdAndUpdate(
       req.params.id,
       req.body,
+
       { new: true }
     );
 
@@ -93,9 +101,11 @@ export const editReview = async (req, res, next) => {
     const findReviews = await ReviewModel.find({ book: bookId });
     let sumRatings = 0;
     const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
-    const average = (sumRatingsArray.at(-1) / findReviews.length)
-      .toFixed(1)
-      .replace(/\.0+$/, '');
+    const average = sumRatingsArray.at(-1)
+      ? (sumRatingsArray.at(-1) / findReviews.length)
+          .toFixed(1)
+          .replace(/\.0+$/, '')
+      : 0;
 
     const updateBook = await BookModel.findByIdAndUpdate(
       bookId,

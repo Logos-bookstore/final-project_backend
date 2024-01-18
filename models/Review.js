@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 
 const ReviewSchema = new Schema({
   book: { type: Schema.Types.ObjectId, ref: 'Book' },
-  text: { type: String, required: true },
+  text: String,
   rating: { type: Number, min: 1, max: 5, required: true },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
