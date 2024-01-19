@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User.js";
+import ReviewModel from "../models/Review.js";
+import BookModel from "../models/Book.js";
+import OrderModel from "../models/Order.js";
 
 const register = async (req, res, next) => {
   try {
@@ -96,6 +99,27 @@ const deleteUserById = async (req, res, next) => {
   const userId = req.params.id;
 
   try {
+    const userReviews = await ReviewModel.find({userId: userId});
+    const deletedReviews = await ReviewModel.deleteMany({userId: userId});
+
+      // delete the references in the User & Book collections:
+      if(userReviews) {
+        for(let i = 0; i < userReviews.length; i++) {
+        // update the average rating of the book
+        const findReviews = await ReviewModel.find({book: userReviews[i].book});
+        let sumRatings = 0;
+        const sumRatingsArray = findReviews.map((i) => (sumRatings += i.rating));
+        const average = sumRatingsArray.at(-1)
+          ? (sumRatingsArray.at(-1) / findReviews.length)
+              .toFixed(1)
+              .replace(/\.0+$/, '')
+          : 0;
+
+          const findBook = await BookModel.findByIdAndUpdate(userReviews[i].book, {avgRating: average, $pull: {reviews: userReviews[i]._id}}, {new: true});
+        };
+      };
+
+    const deletedOrders = await OrderModel.deleteMany({userId: userId});
     const deletedUser = await UserModel.findByIdAndDelete(userId);
 
     if (!deletedUser) {
