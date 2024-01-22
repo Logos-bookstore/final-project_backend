@@ -7,6 +7,7 @@ import {
   updateBook,
   deleteBook,
   searchBook,
+  hello,
 } from '../controllers/booksControllers.js';
 import { streamBookImage } from '../controllers/imageController.js';
 import { authorization } from '../middleware/authorization.js';
@@ -22,5 +23,6 @@ routes.get('/image/:fileName', streamBookImage);
 routes.get('/search/:regex', searchBook);
 routes.patch('/update/:id', authorization, role, updateBook);
 routes.delete('/delete/:id', authorization, role, deleteBook);
+routes.get('/hello', hello);
 
 export default routes;
