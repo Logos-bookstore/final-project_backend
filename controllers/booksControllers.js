@@ -140,15 +140,6 @@ const searchBook = async (req, res, next) => {
   }
 };
 
-const hello = async (req, res, next) => {
-  try {
-    const books = await BookModel.find();
-    res.json({success: true, data: books});
-  } catch (error) {
-    next(error);
-  }
-};
-
 export {
   createBook,
   genreBook,
@@ -156,6 +147,5 @@ export {
   searchBook,
   updateBook,
   deleteBook,
-  getBookById,
-  hello
+  getBookById
 };
