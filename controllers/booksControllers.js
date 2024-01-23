@@ -86,10 +86,71 @@ const getBookById = async (req, res, next) => {
 
 const updateBook = async (req, res, next) => {
   try {
-    const book = await BookModel.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    res.json({ success: true, data: book });
+    if (req.body?.title) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { title: req.body.title },
+        { new: true }
+      );
+    }
+    if (req.body?.author) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { author: req.body.author },
+        { new: true }
+      );
+    }
+    if (req.body?.year) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { year: req.body.year },
+        { new: true }
+      );
+    }
+    if (req.body?.publisher) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { publisher: req.body.publisher },
+        { new: true }
+      );
+    }
+    if (req.body?.genre) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { genre: req.body.genre },
+        { new: true }
+      );
+    }
+    if (req.body?.description) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { description: req.body.description },
+        { new: true }
+      );
+    }
+    if (req.body?.pages) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { pages: req.body.pages },
+        { new: true }
+      );
+    }
+    if (req.body?.price) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { price: req.body.price },
+        { new: true }
+      );
+    }
+    if (req.body?.ISBN) {
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { ISBN: req.body.ISBN },
+        { new: true }
+      );
+    }
+
+    res.json({ success: true, message: 'Book updated successfully.' });
   } catch (error) {
     next(error);
   }
@@ -147,5 +208,5 @@ export {
   searchBook,
   updateBook,
   deleteBook,
-  getBookById
+  getBookById,
 };
