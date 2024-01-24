@@ -86,6 +86,19 @@ const getBookById = async (req, res, next) => {
 
 const updateBook = async (req, res, next) => {
   try {
+    if (req.files?.image?.name) {
+      const fileName = Date.now() + '_' + req.files.image.name;
+      const data = {
+        fileName: fileName,
+        data: req.files.image.data,
+        thumbnail: `${process.env.BOOK_IMAGE}/${fileName}`,
+      };
+      await BookModel.findByIdAndUpdate(
+        req.params.id,
+        { image: data },
+        { new: true }
+      );
+    }
     if (req.body?.title) {
       await BookModel.findByIdAndUpdate(
         req.params.id,
