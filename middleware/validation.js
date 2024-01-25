@@ -18,7 +18,9 @@ export const validation = [
       minNumbers: 1,
       returnScore: false,
     })
-    .withMessage('Please make sure you use a strong password.'),
+    .withMessage(
+      'Password needs to be min. 9 characters long (min. 1 lowercase, 1 uppercase, 1 symbol and 1 number).'
+    ),
   body('firstName')
     .exists()
     .withMessage('Please make sure to include your first name.')
