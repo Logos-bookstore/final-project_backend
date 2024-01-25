@@ -91,7 +91,7 @@ const updateBook = async (req, res, next) => {
       const data = {
         fileName: fileName,
         data: req.files.image.data,
-        thumbnail: `${process.env.BOOK_IMAGE}/${fileName}`,
+        thumbnail: `${process.env.THUMBNAIL}${fileName}`,
       };
       await BookModel.findByIdAndUpdate(
         req.params.id,
