@@ -48,6 +48,7 @@ const genreBook = async (req, res, next) => {
       price: 1,
       ISBN: 1,
       'image.thumbnail': 1,
+      pic: 1,
     });
     res.json({ success: true, data: books });
   } catch (error) {
@@ -68,6 +69,7 @@ const getAllBooks = async (req, res, next) => {
       price: 1,
       ISBN: 1,
       'image.thumbnail': 1,
+      pic: 1,
     });
     res.json({ success: true, data: books });
   } catch (error) {
