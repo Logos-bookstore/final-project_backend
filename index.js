@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-/* import cors from 'cors'; */
+import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
 import { database } from './database/database.js';
@@ -17,16 +17,16 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 
-/* app.use(cors({ origin: `${process.env.HOST}`, exposedHeaders: ['token'] })); */
+app.use(cors({ origin: `${process.env.HOST}`, exposedHeaders: ['token'] }));
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true }));
-/* app.use(express.static('./views/public')); */
+app.use(express.static('./views/public'));
 app.use(fileUpload());
 app.use(morgan('tiny'));
 
 database();
 
-app.use(express.static('./views/dist'));
+/* app.use(express.static('./views/dist')); */
 app.use('/api/books', books);
 app.use('/api/genres', genres);
 app.use('/api/user', user);
