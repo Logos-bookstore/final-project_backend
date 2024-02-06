@@ -19,7 +19,7 @@ const PORT = process.env.PORT;
 
 /* app.use(cors({ origin: `${process.env.HOST}`, exposedHeaders: ['token'] })); */
 app.use(express.json({ limit: '100mb' }));
-/* app.use(express.urlencoded({ extended: true })); */
+app.use(express.urlencoded({ extended: true }));
 /* app.use(express.static('./views/public')); */
 app.use(fileUpload());
 app.use(morgan('tiny'));
